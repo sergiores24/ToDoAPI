@@ -2,13 +2,19 @@ var express	= require('express');
 var cors = require('cors');
 var routes = require('./routes');
 var mongoose = require('mongoose');
-var config = require('./config/config')
+var config = require('./config/config');
+var bodyparser =require('body-parser');
+var expressvalidator = require('express-validator')
+
 
 app	= express();
 
 app.use(cors());
+app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.json());
+app.use(expressvalidator());
 
-app.use('/',routes);
+app.use('/api',routes);
 
 mongoose.connect(config.db, {useNewUrlParser: true});
 
