@@ -6,7 +6,6 @@ var config = require('./config/config');
 var bodyparser =require('body-parser');
 var expressvalidator = require('express-validator')
 
-
 app	= express();
 
 app.use(cors());

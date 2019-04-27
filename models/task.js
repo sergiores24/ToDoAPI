@@ -9,8 +9,6 @@ var TaskSchema = new Schema({
 		description: String,
 		status: String,
 	}],
-=======
->>>>>>> bb22b9cd7479a5fe9d0f84fc9c1c114233deda26
 	users: [{type: Schema.Types.ObjectId, ref:'User'}]
 });
 
