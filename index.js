@@ -9,7 +9,7 @@ var expressvalidator = require('express-validator')
 app	= express();
 
 app.use(cors());
-app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json());
 app.use(expressvalidator());
 

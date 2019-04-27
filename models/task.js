@@ -4,11 +4,7 @@ var Schema = mongoose.Schema;
 var TaskSchema = new Schema({
 	name: String,
 	status: String,
-<<<<<<< HEAD
-	activities: [{
-		description: String,
-		status: String,
-	}],
+	activities: [String],
 	users: [{type: Schema.Types.ObjectId, ref:'User'}]
 });
 
