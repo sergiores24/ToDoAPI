@@ -8,4 +8,4 @@ var TaskSchema = new Schema({
 	users: [{type: Schema.Types.ObjectId, ref:'User'}]
 });
 
-module.exports = mongoose.Model('Task',TaskSchema)
+module.exports = mongoose.model('Task',TaskSchema)

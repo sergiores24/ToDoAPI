@@ -2,9 +2,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var TasksGroupSchema = new Schema({
-	name: string,
-	description: name
+	name: String,
+	description: String,
 	tasks: [{type: Schema.Types.ObjectId,ref:'Task'}]
 });
 
-module.exports=mongoose.Model('TasksGroup',TasksGroupSchema);
+module.exports=mongoose.model('TasksGroup',TasksGroupSchema);
