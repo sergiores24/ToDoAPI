@@ -16,7 +16,13 @@ exports.validator=(method)=>{
 		case 'setStatus':{
 			return[
 				body('taskId','No taks ID provided').exists().isString(),
-				body('status','No status provided').exists().isIn(['Open','In-Progress','Completed','Archived'])
+				body('status','Given status is invalida').exists().isIn(['Open','In-Progress','Completed','Archived'])
+			]
+		}
+		case 'addOrRemoveUser':{
+			return[
+				body('taskId','No taks ID provided').exists().isString(),
+				body('userId','No user ID provided').exists().isString()
 			]
 		}
 	}
@@ -90,5 +96,48 @@ exports.setStatus=(req,res)=>{
 			if(err) return res.status(500).json(err);
 			return res.send('Task\'s Status changed to '+tsk.status);
 		});
+	});
+}
+
+exports.addUser=(req,res)=>{
+	const errors = validationResult(req);
+	if(!errors.isEmpty()){return res.status(500).json({errors: errors.array()});}
+
+	Task.findById(req.body.taskId,(err,task)=>{
+		if(err) return res.status(500).send('Task could not be found');
+		if(!task) return res.status(404).send('Task not found');
+
+		var isUser=task.users.some((usr_id)=>{
+			return user_id.equals(req.body.userId);
+		});
+		if(isUser) return res.send('User has already been assigned this task');
+
+		User.findById(req.body.userId,(err,user)=>{
+			if(err) res.status(500).send('User could not be found');
+			if(!user) return res.status(404).send('User not found');
+			task.users.push(req.body.userId);
+			task.save((err)=>{
+				if(err) return res.status(500).send('Task could not be updated');
+				return res.send('Task assigned to '+user.name+' '+user.surname);
+			});
+		});
+	});
+}
+
+exports.removeUser=(req,res)=>{
+	const errors = validationResult(req);
+	if(!errors.isEmpty()){return res.status(500).json({errors: errors.array()});}
+	
+	Task.findById(req.body.taskId,(err,task)=>{
+		if(err) return res.status(500).send('Task could not be found');
+		if(!task) return res.status(404).send('Task not found');
+
+		var index=task.users.indexOf(req.body.userId);
+		if(index<=-1) return res.status(404).send('User has not been assigned to this task');
+		task.users.splice(index,1);
+		task.save((err)=>{
+			if(err) res.status(500).send('Could not save the changes');
+			return res.send('Task has been removed for the user');
+		})
 	});
 }
