@@ -76,6 +76,13 @@ exports.createTask=(req,res)=>{
 	});
 }
 
+exports.getTasks=(req,res)=>{
+	Task.find({},(err,tasks)=>{
+		if(err) return res.status(500).send('Could not get the tasks');
+		return res.json(tasks);
+	});
+}
+
 exports.getTaskUsers=(req,res)=>{
 	Task.findById(req.body.taskId).populate('users').exec((err,task)=>{
 		if(err) return res.status(500).send('Could no find tasks groups');

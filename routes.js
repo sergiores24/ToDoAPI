@@ -15,10 +15,11 @@ routes.get('/tasksgroup/getall',tgController.getTasksGroups);
 routes.post('/tasksgroup/create',tgController.validator('createTasksGroup'),tgController.createTasksGroup);
 
 //Task Routes
+routes.get('/task/getall',taskController.getTasks);
 routes.get('/task/getusers',taskController.getTaskUsers);
 routes.post('/task/create',taskController.validator('createTask'),taskController.createTask);
-routes.post('/task/setstatus',taskController.validator('setStatus'),taskController.setStatus);
-routes.post('/task/adduser',taskController.validator('addOrRemoveUser'),taskController.addUser);
-routes.post('/task/removeuser',taskController.validator('addOrRemoveUser'),taskController.removeUser);
+routes.patch('/task/setstatus',taskController.validator('setStatus'),taskController.setStatus);
+routes.patch('/task/adduser',taskController.validator('addOrRemoveUser'),taskController.addUser);
+routes.patch('/task/removeuser',taskController.validator('addOrRemoveUser'),taskController.removeUser);
 
 module.exports=routes;
