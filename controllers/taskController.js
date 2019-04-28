@@ -13,6 +13,12 @@ exports.validator=(method)=>{
 				body('groupId','No Tasks group ID provided').exists()
 			]
 		}
+		case 'setStatus':{
+			return[
+				body('taskId','No taks ID provided').exists().isString(),
+				body('status','No status provided').exists().isIn(['Open','In-Progress','Completed','Archived'])
+			]
+		}
 	}
 }
 
@@ -66,7 +72,23 @@ exports.createTask=(req,res)=>{
 
 exports.getTaskUsers=(req,res)=>{
 	Task.findById(req.body.taskId).populate('users').exec((err,task)=>{
-		if(err) return res.status(500).send('could no find tasks groups');
+		if(err) return res.status(500).send('Could no find tasks groups');
+		if(!task) return res.status(404).send('Task not found');
 		return res.json(task.users);
+	});
+}
+
+exports.setStatus=(req,res)=>{
+	const errors = validationResult(req);
+	if(!errors.isEmpty()){return res.status(500).json({errors: errors.array()});}
+
+	Task.findById(req.body.taskId,(err,task)=>{
+		if(err) return res.status(500).json(err);
+		if(!task) return res.status(404).send('Task not found');
+		task.status=req.body.status;
+		task.save((err,tsk)=>{
+			if(err) return res.status(500).json(err);
+			return res.send('Task\'s Status changed to '+tsk.status);
+		});
 	});
 }

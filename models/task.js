@@ -6,6 +6,6 @@ var TaskSchema = new Schema({
 	status: String,
 	activities: [String],
 	users: [{type: Schema.Types.ObjectId, ref:'User'}]
-});
+},{ timestamps: { createdAt: 'created_at' }});
 
 module.exports = mongoose.model('Task',TaskSchema)

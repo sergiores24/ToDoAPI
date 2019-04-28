@@ -28,5 +28,5 @@ connection.on('error', (err) => {
     process.exit();
 });
 
-app.listen(3000);
+app.listen(config.port);
 console.log('I\'m running');

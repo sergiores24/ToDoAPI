@@ -17,5 +17,6 @@ routes.post('/tasksgroup/create',tgController.validator('createTasksGroup'),tgCo
 //Task Routes
 routes.get('/task/getusers',taskController.getTaskUsers);
 routes.post('/task/create',taskController.validator('createTask'),taskController.createTask);
+routes.post('/task/setstatus',taskController.validator('setStatus'),taskController.setStatus);
 
 module.exports=routes;
