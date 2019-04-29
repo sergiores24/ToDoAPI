@@ -8,7 +8,6 @@ exports.validator=(method)=>{
 		case 'createTask':{
 			return [
 				body('name','Not name provided').exists().isString(),
-				body('activities','Not an array').optional().isArray(),
 				body('users','Not an array').optional().isArray(),
 				body('groupId','No Tasks group ID provided').exists()
 			]
@@ -39,7 +38,6 @@ exports.createTask=(req,res)=>{
 			var taskModel=Task({
 					name: req.body.name,
 					status: 'Open',
-					activities: req.body.activities
 			});
 			taskModel.save((err,task)=>{
 				if(err) return res.status(500).send('Task could not be created');
@@ -60,7 +58,6 @@ exports.createTask=(req,res)=>{
 				var taskModel=Task({
 					name: req.body.name,
 					status: 'Open',
-					activities: req.body.activities,
 					users: req.body.users
 				});
 				taskModel.save((err,task)=>{
