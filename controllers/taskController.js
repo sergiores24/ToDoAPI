@@ -81,7 +81,8 @@ exports.getTasks=(req,res)=>{
 }
 
 exports.getTaskUsers=(req,res)=>{
-	Task.findById(req.body.taskId).populate('users').exec((err,task)=>{
+	if(!req.query.taskId) return res.status(404).send('No Task ID provided');
+	Task.findById(req.query.taskId).populate('users').exec((err,task)=>{
 		if(err) return res.status(500).send('Could no find tasks groups');
 		if(!task) return res.status(404).send('Task not found');
 		return res.json(task.users);

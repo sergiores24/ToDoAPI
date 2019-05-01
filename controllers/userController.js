@@ -30,7 +30,14 @@ exports.registerUser= (req,res) => {
 };
 
 exports.getUsers=(req,res) =>{
-	User.find({},(err,users)=>{
+	var queryOps={};
+	if(req.query.users){
+		var userIds=JSON.parse(req.query.users);
+		if(Array.isArray(userIds)){
+			queryOps={_id:{$nin: userIds}};
+		}
+	}
+	User.find(queryOps,(err,users)=>{
 		if(err) return res.status(500).send('Could not find users');
 		return res.json(users);
 	});
