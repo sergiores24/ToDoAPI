@@ -112,9 +112,7 @@ exports.addUser=(req,res)=>{
 		if(err) return res.status(500).send('Task could not be found');
 		if(!task) return res.status(404).send('Task not found');
 
-		var isUser=task.users.some((usr_id)=>{
-			return user_id.equals(req.body.userId);
-		});
+		var isUser=task.users.includes(req.body.userId);
 		if(isUser) return res.send('User has already been assigned this task');
 
 		User.findById(req.body.userId,(err,user)=>{
