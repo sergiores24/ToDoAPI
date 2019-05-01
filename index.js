@@ -15,7 +15,7 @@ app.use(expressvalidator());
 
 app.use('/api',routes);
 
-mongoose.connect(config.db, {useNewUrlParser: true});
+mongoose.connect(config.db, {useNewUrlParser: true, useCreateIndex: true});
 
 const connection = mongoose.connection;
  

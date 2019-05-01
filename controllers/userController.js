@@ -24,7 +24,7 @@ exports.registerUser= (req,res) => {
 	});
 
 	userModel.save((err,user)=>{
-		if(err){ return res.status(500).send('Could not create user');}
+		if(err){ return res.status(500).json(err);}
 		res.status(200).json(user);
 	});
 };
