@@ -8,6 +8,7 @@ routes.get('/',(req,res)=>{return res.send('Hello there!');});
 
 //User Routes
 routes.get('/user/getall',userController.getUsers);
+routes.get('/user/gettasks',userController.getUserTasks);
 routes.post('/user/register',userController.validator('registerUser'),userController.registerUser);
 
 //TasksGroup Routes
