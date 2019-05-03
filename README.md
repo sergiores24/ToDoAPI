@@ -12,3 +12,10 @@ Once it finnish run:
 ~$ node index.js
 
 You can set the server port and the mongoDB url in "config.js" file located at "config" folder
+
+This project was made with [Node.js](https://nodejs.org), [Express](https://expressjs.com/) framework and [MongoDB](https://www.mongodb.com/).
+
+Libraries:
+- [body-parser](https://www.npmjs.com/package/body-parser)
+- [express-validator](https://express-validator.github.io/docs/)
+- [mongoose](https://mongoosejs.com/)
