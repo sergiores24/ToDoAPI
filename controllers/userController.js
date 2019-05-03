@@ -18,7 +18,7 @@ exports.validator = (method)=>{
 exports.registerUser= (req,res) => {
 	//Looking for Express-Validator errors
 	const errors = validationResult(req);
-	if(!errors.isEmpty()){return res.status(500).json({errors: errors.array()});}
+	if(!errors.isEmpty()){return res.status(400).json({errors: errors.array()});}
 
 	//Creating User model and then saves it
 	var userModel=User({
@@ -37,26 +37,21 @@ exports.registerUser= (req,res) => {
 //Recieves one array parameter with ids of users to omit
 exports.getUsers=(req,res) =>{
 	var queryOps={};
-	//check if there is users IDs array
 	if(req.query.users){
 		var userIds=JSON.parse(req.query.users);
 		if(Array.isArray(userIds)){
-			//Uses nin to exclude the listed users
 			queryOps={_id:{$nin: userIds}};
 		}
 	}
-	//find and send
 	User.find(queryOps,(err,users)=>{
-		if(err) return res.status(500).send('Could not find users');
+		if(err) return res.status(500).json(err);
 		return res.json(users);
 	});
 }
 
+//Returns task assigned to the user
 exports.getUserTasks=(req,res)=>{
-	//Check if there is an User ID
 	if(!req.query.userId) return res.status(400).send('No User ID  provided');
-
-	//Find tasks the user has assigned
 	Task.find({users: req.query.userId},(err,tasks)=>{
 		if(err) return res.status(500).json(err);
 		if(!tasks) return res.status(404).send('No task found');

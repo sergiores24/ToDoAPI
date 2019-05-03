@@ -6,7 +6,6 @@ var config = require('./config/config');
 var bodyparser =require('body-parser');
 var expressvalidator = require('express-validator')
 
-//Define ExpressJs App
 var app	= express();
 
 //Including middlewares

@@ -34,9 +34,9 @@ exports.validator=(method)=>{
 exports.createTask=(req,res)=>{
 	//Looking for Express-Validator errors
 	const errors = validationResult(req);
-	if(!errors.isEmpty()){return res.status(500).json({errors: errors.array()});}
+	if(!errors.isEmpty()){return res.status(400).json({errors: errors.array()});}
 
-	//Checking if the Tasks group recieved exists
+	//Checking if the Tasks group received exists
 	TasksGroup.findById(req.body.groupId,(err,tgroup)=>{
 		if(err) return res.status(500).send('could not find the Tasks Group');
 		if(!tgroup) return res.status(404).send('Tasks Group not found');
@@ -47,12 +47,10 @@ exports.createTask=(req,res)=>{
 					name: req.body.name,
 					status: 'Open',
 			});
-			//Save task model
+			//Save task model and add task ID tasks IDs array in tasks group
 			taskModel.save((err,task)=>{
 				if(err) return res.status(500).send('Task could not be created');
-				//Then add Task ID to the corresponding task group
 				tgroup.tasks.push(task._id);
-				//Save task group model
 				tgroup.save((err,tg)=>{
 					if(err) res.status(500).json(err);
 					return res.send('Task created and added to It\'s group')
@@ -67,19 +65,17 @@ exports.createTask=(req,res)=>{
 				if(err) return res.status(500).send('Users could not be found');
 				if(!users) return res.status(404).send('Users not found');
 
-				//If users array and ids array have the same length, then all users were found
+				//If all users are found then creates the new task model
 				if(users.length!=length) return res.status(404).send('One or more users not found');
 				var taskModel=Task({
 					name: req.body.name,
 					status: 'Open',
 					users: req.body.users
 				});
-				//Saving Task model
+
 				taskModel.save((err,task)=>{
 					if(err) return res.status(500).send('Task could not be created');
-					//Then add Task ID to the corresponding task group
 					tgroup.tasks.push(task._id);
-					//Save task group model
 					tgroup.save((err,tg)=>{
 						if(err) res.status(500).json(err);
 						return res.send('Task created and added to It\'s group')
@@ -98,10 +94,9 @@ exports.getTasks=(req,res)=>{
 	});
 }
 
-//Given a Task ID returns the users assign to it
+//Given a Task ID returns the users assigned to it
 exports.getTaskUsers=(req,res)=>{
 	if(!req.query.taskId) return res.status(404).send('No Task ID provided');
-	//Find task and populate with users from users IDs array in task model
 	Task.findById(req.query.taskId).populate('users').exec((err,task)=>{
 		if(err) return res.status(500).send('Could no find tasks groups');
 		if(!task) return res.status(404).send('Task not found');
@@ -132,24 +127,21 @@ exports.addUser=(req,res)=>{
 	const errors = validationResult(req);
 	if(!errors.isEmpty()){return res.status(500).json({errors: errors.array()});}
 
-	//Find Task
+	//Checking if Task exists
 	Task.findById(req.body.taskId,(err,task)=>{
 		if(err) return res.status(500).send('Task could not be found');
-		//Checking if Task exists
 		if(!task) return res.status(404).send('Task not found');
 
 		//Looking for the given User ID on users IDs array in Task model
 		var isUser=task.users.includes(req.body.userId);
 		if(isUser) return res.send('User has already been assigned this task');
 
-		//If not already assigned find the user
+		//If not already assigned, check if User exists
 		User.findById(req.body.userId,(err,user)=>{
 			if(err) res.status(500).send('User could not be found');
-			//Checking if User exists
 			if(!user) return res.status(404).send('User not found');
-			//Push user's ID into users IDs array in task
+			//If user exists Push user's ID into users IDs array in task
 			task.users.push(req.body.userId);
-			//save model
 			task.save((err)=>{
 				if(err) return res.status(500).send('Task could not be updated');
 				return res.send('Task assigned to '+user.name+' '+user.surname);
@@ -171,7 +163,8 @@ exports.removeUser=(req,res)=>{
 		//If not found, send error message
 		var index=task.users.indexOf(req.body.userId);
 		if(index<=-1) return res.status(404).send('User has not been assigned to this task');
-		//If found remove id from array and save changes
+		
+		//If found remove id from array
 		task.users.splice(index,1);
 		task.save((err)=>{
 			if(err) res.status(500).send('Could not save the changes');
